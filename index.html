@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="description" content="">
+		<link rel="stylesheet" href="css/mini-calendrier.css">
+	</head>
+
+	<script type="text/x-template" id="calendar">
+		<div v-if="display === true" id="popupCalendar">
+			<ul id="weekDays">
+				<li v-for="index in 7" >
+					<input type="checkbox" :id="'weekday'+index" @change="toggleWeekday" :value="index" v-model="checked_weekdays"/>
+					<label :for="'weekday'+index">
+						{{short_day_names[index - 1 ]}}
+					</label>
+				</li>
+			</ul>
+			<ul id="monthList">
+				<li v-for="(day, index) in daysList" @mousedown="selection_hover=day.position" @mouseup="selection_hover=false">
+					<input type="checkbox" v-if="!day.empty" :id="'day'+day.position" :value="day.position" v-model="checked_days"/>
+					<label :for="'day'+day.position" v-if="!day.empty" @mouseover="mouseSelect">
+						{{day.position}}
+					</label>
+					<span v-else>  </span>
+				</li>
+			</ul>
+            <div><button type="button" @click="validCal">Valider</button></div>
+		</div>
+	</script>
+    
+    
+
+	<body>
+        
+		<main>
+			<form>
+				<section id="daysPicker">
+					<label for="monthSelector">Choisir la période</label>
+					<select v-model="month" id="monthSelector" @change="displayCal">
+						<option v-for="index in 12" :value="index" >
+							{{month_names[index-1]}} {{year}}
+						</option>
+					</select>
+
+					<calendar
+						:display="calendar_display"
+						:month="month"
+						:year="year"
+                        @selection="selectedDays">
+					</calendar>
+                    
+                    <p v-if="selection"> Sélection pour le mois de {{month_names[month -1 ]}} {{year}} : <span v-for="day in selection"> {{ day }} </span></p>
+
+				</section>
+			</form>
+		</main>
+
+		<script type="text/javascript" src="js/vue.min.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
+
+	</body>
+
+</html>
